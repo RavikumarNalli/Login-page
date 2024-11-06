@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .message {
+            text-align: center;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="registerContainer">
+    <h2>Register</h2>
+    <input type="text" id="registerUsername" placeholder="Username" required>
+    <input type="password" id="registerPassword" placeholder="Password" required>
+    <button onclick="register()">Register</button>
+    <div class="message" id="registerMessage"></div>
+</div>
+
+<div class="container" id="loginContainer" style="display:none;">
+    <h2>Login</h2>
+    <input type="text" id="loginUsername" placeholder="Username" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button onclick="login()">Login</button>
+    <div class="message" id="loginMessage"></div>
+</div>
+
+<script>
+    // Register function
+    function register() {
+        const username = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+
+        if (username && password) {
+            localStorage.setItem(username, password); // Store in localStorage
+            document.getElementById('registerMessage').textContent = "Registration successful!";
+            document.getElementById('registerMessage').style.color = 'green';
+            setTimeout(() => {
+                showLogin(); // Switch to login screen after registration
+            }, 1000);
+        } else {
+            document.getElementById('registerMessage').textContent = "Please fill out all fields.";
+            document.getElementById('registerMessage').style.color = 'red';
+        }
+    }
+
+    // Login function
+    function login() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        const storedPassword = localStorage.getItem(username);
+
+        if (storedPassword === password) {
+            sessionStorage.setItem('loggedInUser', username); // Store session
+            document.getElementById('loginMessage').textContent = "Login successful!";
+            document.getElementById('loginMessage').style.color = 'green';
+            setTimeout(() => {
+                alert(`Welcome, ${username}!`); // Redirect to home or dashboard
+                window.location.reload();
+            }, 1000);
+        } else {
+            document.getElementById('loginMessage').textContent = "Invalid username or password.";
+            document.getElementById('loginMessage').style.color = 'red';
+        }
+    }
+
+    // Function to display login screen
+    function showLogin() {
+        document.getElementById('registerContainer').style.display = 'none';
+        document.getElementById('loginContainer').style.display = 'block';
+    }
+
+    // Check if a user is already logged in
+    window.onload = function () {
+        if (sessionStorage.getItem('loggedInUser')) {
+            alert(`Welcome back, ${sessionStorage.getItem('loggedInUser')}!`);
+            // Redirect to home or dashboard
+        } else {
+            showLogin();
+        }
+    };
+</script>
+
+</body>
+</html>
